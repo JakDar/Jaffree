@@ -91,8 +91,8 @@ public class FFmpeg {
         return this;
     }
 
-    public FFmpeg setTimeouts(Timeouts timeouts) {
-        this.timeouts = timeouts;
+    public FFmpeg setTimeouts(long processOutputTimeoutMillis, long executorStopTimeoutMillis) {
+        this.timeouts = new Timeouts(processOutputTimeoutMillis, executorStopTimeoutMillis);
         return this;
     }
 
@@ -110,6 +110,7 @@ public class FFmpeg {
 
     /**
      * Supply custom ProgressListener to receive progress events
+     *
      * @param progressListener listener
      * @return this
      */
@@ -120,6 +121,7 @@ public class FFmpeg {
 
     /**
      * Supply custom OutputListener to receive ffmpeg output.
+     *
      * @param outputListener listener
      * @return this
      */
@@ -268,7 +270,7 @@ public class FFmpeg {
     }
 
 
-    public static class Timeouts {
+    static class Timeouts {
         public final long processOutputTimeoutMillis;
         public final long executorStopTimeoutMillis;
 
