@@ -4,7 +4,7 @@
                     http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.kokorin.jaffree</groupId>
+    <groupId>io.codeheroes</groupId>
     <artifactId>jaffree</artifactId>
     <version>0.9.0</version>
     <packaging>jar</packaging>
@@ -25,25 +25,17 @@
             <url>https://github.com/kokorin</url>
         </developer>
     </developers>
-    <scm>
-        <connection>scm:git:git://github.com/kokorin/Jaffree.git</connection>
-        <developerConnection>scm:git:ssh://github.com/kokorin/Jaffree.git</developerConnection>
-        <url>http://github.com/kokorin/Jaffree/tree/master</url>
-    </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>bintray-codeheroes-maven</id>
+            <name>codeheroes-maven</name>
+            <url>https://api.bintray.com/maven/codeheroes/maven/jaffre/;publish=1</url>
         </repository>
     </distributionManagement>
 
-
     <properties>
+<!--        <skipTests>true</skipTests>-->
         <sl4j.version>1.7.25</sl4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -156,18 +148,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <compilerArgs>-Xlint:unchecked</compilerArgs>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
         </plugins>

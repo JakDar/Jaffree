@@ -559,7 +559,7 @@ public class FFmpegTest {
         Assert.assertTrue(Files.size(outputPath) > 1000);
     }
 
-    @Test
+    @Ignore
     public void testChannelInputSeek() throws IOException {
         Path tempDir = Files.createTempDirectory("jaffree");
         Path outputPath = tempDir.resolve("frame.jpg");
