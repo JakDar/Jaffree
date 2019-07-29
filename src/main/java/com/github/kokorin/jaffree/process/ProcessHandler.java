@@ -36,6 +36,9 @@ public class ProcessHandler<T> {
     private StdReader<T> stdErrReader = new GobblingStdReader<>();
     private List<Runnable> runnables = null;
 
+    private long processOutputTimeoutMillis = 10_000;
+    private long executorStopTimeoutMillis = 10_000;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessHandler.class);
 
     public ProcessHandler(Path executable, String contextName) {
@@ -55,6 +58,16 @@ public class ProcessHandler<T> {
 
     public ProcessHandler<T> setStdErrReader(StdReader<T> stdErrReader) {
         this.stdErrReader = stdErrReader;
+        return this;
+    }
+
+    public ProcessHandler<T> setProcessOutputTimeout(long processOutputTimeoutMillis) {
+        this.processOutputTimeoutMillis = processOutputTimeoutMillis;
+        return this;
+    }
+
+    public ProcessHandler<T> setExecutorStopTimeout(long executorStopTimeoutMillis) {
+        this.executorStopTimeoutMillis = executorStopTimeoutMillis;
         return this;
     }
 
@@ -104,14 +117,14 @@ public class ProcessHandler<T> {
         Exception interrupted = null;
 
         try {
-            waitForProcessOutput(process, 10_000);
+            waitForProcessOutput(process, this.processOutputTimeoutMillis);
 
             executor = startExecution(process, resultRef);
 
             LOGGER.info("Waiting for process to finish");
             status = process.waitFor();
 
-            waitForExecutorToStop(executor, 10_000);
+            waitForExecutorToStop(executor, this.executorStopTimeoutMillis);
         } catch (InterruptedException e) {
             LOGGER.warn("Waiting for process has been interrupted", e);
             interrupted = e;

@@ -2,3 +2,7 @@
 *.iml
 target
 .artifacts
+.settings/
+.classpath
+.project
+

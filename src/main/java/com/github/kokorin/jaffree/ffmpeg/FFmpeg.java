@@ -41,6 +41,8 @@ public class FFmpeg {
     private boolean overwriteOutput;
     private ProgressListener progressListener;
     private OutputListener outputListener;
+    private Timeouts timeouts = null;
+
     //-progress url (global)
     //-filter_threads nb_threads (global)
     //-debug_ts (global)
@@ -86,6 +88,11 @@ public class FFmpeg {
 
     public FFmpeg addOutput(Output output) {
         outputs.add(output);
+        return this;
+    }
+
+    public FFmpeg setTimeouts(Timeouts timeouts) {
+        this.timeouts = timeouts;
         return this;
     }
 
@@ -153,12 +160,20 @@ public class FFmpeg {
             }
         }
 
-        return new ProcessHandler<FFmpegResult>(executable, contextName)
+        ProcessHandler<FFmpegResult> builder = new ProcessHandler<FFmpegResult>(executable, contextName)
                 .setStdInWriter(createStdInWriter())
                 .setStdErrReader(createStdErrReader())
                 .setStdOutReader(createStdOutReader())
-                .setRunnables(helpers)
-                .execute(buildArguments());
+                .setRunnables(helpers);
+
+
+        if (this.timeouts != null) {
+            builder.setExecutorStopTimeout(this.timeouts.executorStopTimeoutMillis);
+            builder.setProcessOutputTimeout(this.timeouts.processOutputTimeoutMillis);
+        }
+
+
+        return builder.execute(buildArguments());
     }
 
     /**
@@ -250,5 +265,17 @@ public class FFmpeg {
         }
 
         return new FFmpeg(executable);
+    }
+
+
+    public static class Timeouts {
+        public final long processOutputTimeoutMillis;
+        public final long executorStopTimeoutMillis;
+
+        Timeouts(long processOutputTimeoutMillis, long executorStopTimeoutMillis) {
+            this.processOutputTimeoutMillis = processOutputTimeoutMillis;
+            this.executorStopTimeoutMillis = executorStopTimeoutMillis;
+        }
+
     }
 }
